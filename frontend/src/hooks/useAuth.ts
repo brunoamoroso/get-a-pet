@@ -7,11 +7,23 @@ import useFlashMessage from "./useFlashMessage";
 
 interface IAuth{
   register: (user: Object) => Promise<void>;
+  authenticated: boolean;
 }
 
 export default function useAuth(): IAuth {
 
   const {setFlashMessage} = useFlashMessage();
+  const [authenticated, setAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if(token){
+      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+      setAuthenticated(true);
+    }
+  }, []); 
 
   async function register(user: Object) {
 
@@ -23,7 +35,7 @@ export default function useAuth(): IAuth {
         return response.data;
       });
 
-      console.log(data);
+      await authUser(data);
     } catch (err: any) {
       msgText = err.response.data.message;
       msgType = 'error'
@@ -32,5 +44,11 @@ export default function useAuth(): IAuth {
     setFlashMessage(msgText, msgType);
   }
 
-  return { register };
+  async function authUser(data: any) {
+    setAuthenticated(true);
+    localStorage.setItem('token', JSON.stringify(data.token));
+    navigate('/');
+  }
+
+  return { register, authenticated };
 }

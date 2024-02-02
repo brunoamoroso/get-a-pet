@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth';
 
 interface IUserContext{
   register: any;
+  authenticated: boolean;
 }
 
 interface IUserProvider {
@@ -14,9 +15,9 @@ interface IUserProvider {
 const Context = createContext<IUserContext | null>(null);
 
 function UserProvider ({children}: IUserProvider) {
-    const {register} = useAuth();
+    const {authenticated, register} = useAuth();
   return (
-    <Context.Provider value={{register}}>
+    <Context.Provider value={{authenticated, register}}>
         {children}
     </Context.Provider>
   );
