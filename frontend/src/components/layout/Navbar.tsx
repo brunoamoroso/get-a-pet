@@ -10,11 +10,13 @@ import { Context } from "../../context/UserContext";
 export default function Navbar() {
   const userContext = useContext(Context);
   let authenticated;
+  let logout;
 
   if (userContext) {
     authenticated = userContext.authenticated;
+    logout = userContext.logout;
   }
-
+  
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbar_logo}>
@@ -27,7 +29,7 @@ export default function Navbar() {
         </li>
         {authenticated ? (
           <>
-            <p>logado</p>
+            <li onClick={logout}>Sair</li>
           </>
         ) : (
           <>

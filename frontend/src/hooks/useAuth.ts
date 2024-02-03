@@ -8,6 +8,7 @@ import useFlashMessage from "./useFlashMessage";
 interface IAuth{
   register: (user: Object) => Promise<void>;
   authenticated: boolean;
+  logout(): any; 
 }
 
 export default function useAuth(): IAuth {
@@ -50,5 +51,16 @@ export default function useAuth(): IAuth {
     navigate('/');
   }
 
-  return { register, authenticated };
+  function logout() {
+    const msgText = 'Logout realizado com sucesso!';
+    const msgType = 'success';
+
+    setAuthenticated(false);
+    localStorage.removeItem('token');
+    api.defaults.headers.Authorization = null;
+    navigate('/');
+    setFlashMessage(msgText, msgType);
+  }
+
+  return { register, authenticated, logout };
 }
