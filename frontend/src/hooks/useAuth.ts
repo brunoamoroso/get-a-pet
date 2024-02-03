@@ -9,6 +9,7 @@ interface IAuth{
   register: (user: Object) => Promise<void>;
   authenticated: boolean;
   logout(): any; 
+  login: (user: Object) => Promise<void>;
 }
 
 export default function useAuth(): IAuth {
@@ -62,5 +63,24 @@ export default function useAuth(): IAuth {
     setFlashMessage(msgText, msgType);
   }
 
-  return { register, authenticated, logout };
+  async function login(user: Object){
+    let msgText = 'Login realizado com sucesso!';
+    let msgType = 'success';
+
+    try{
+      const data = await api.post("/users/login", user).then((response) => {
+        return response.data;
+      });
+
+      await authUser(data);
+      
+    }catch(err: any){
+      msgText = err.response.data.message;
+      msgType = 'error';
+    }
+
+    setFlashMessage(msgText, msgType);
+  }
+
+  return { register, authenticated, logout, login };
 }

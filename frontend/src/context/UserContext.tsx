@@ -3,9 +3,10 @@ import useAuth from '../hooks/useAuth';
 
 
 interface IUserContext{
-  register: any;
+  register: (user: Object) => Promise<void>;
   authenticated: boolean;
-  logout: any;
+  logout(): any;
+  login: (user: Object) => Promise<void>;
 }
 
 interface IUserProvider {
@@ -16,9 +17,9 @@ interface IUserProvider {
 const Context = createContext<IUserContext | null>(null);
 
 function UserProvider ({children}: IUserProvider) {
-    const {authenticated, register, logout} = useAuth();
+    const {authenticated, register, logout, login} = useAuth();
   return (
-    <Context.Provider value={{authenticated, register, logout}}>
+    <Context.Provider value={{authenticated, register, logout, login}}>
         {children}
     </Context.Provider>
   );
