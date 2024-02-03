@@ -147,6 +147,8 @@ export default class UserController {
     if (!checkPassword) {
       return res.status(422).json({ message: "Senha inválida" });
     }
+
+    await createUserToken(user, req, res);
   }
 
   static async checkUser(req: Request, res: Response) {
