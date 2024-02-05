@@ -1,16 +1,75 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import formStyles from "../../form/Form.module.css";
 import Input from "../../form/Input";
 import styles from "./Profile.module.css";
+import api from "../../../utils/api";
+import useFlashMessage from "../../../hooks/useFlashMessage";
+
+interface IUser {
+  _id?: string;
+  img?: File | "";
+  name?: string | "";
+  email?: string | "";
+  phone?: string | "";
+  password?: string | "";
+}
 
 export default function Profile() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<IUser>({});
+  const [token] = useState(localStorage.getItem("token") || "");
+  const {setFlashMessage} = useFlashMessage();
 
-  function onFileChange() {}
+  useEffect(() => {
+    api
+      .get("/users/checkuser", {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token)}`,
+        },
+      })
+      .then((response) => {
+        setUser(response.data);
+      });
+  }, [token]);
 
-  function handleChange() {}
+  function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files !== null) {
+      setUser({ ...user, [e.target.value]: e.target.files[0] });
+    }
+  }
 
-  function handleSubmit() {}
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    let msgType = "success";
+
+
+    const formData = new FormData();
+
+    (Object.keys(user) as (keyof typeof user)[]).forEach(
+      (key) => {
+        const value = user[key];
+        formData.append(key, value ? value.toString() : "");
+      }
+    );
+
+    const data = await api.patch(`users/edit/${user._id}`, formData, {
+        headers:{
+            Authorization: `Bearer ${JSON.parse(token)}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    }).then((response) => {
+        return response.data;
+    }).catch((err) => {
+        msgType = 'error';
+        return err.response.data;
+    });
+
+    setFlashMessage(data.message, msgType);
+  }
+
   return (
     <section>
       <div className={styles.profile_header}>
@@ -54,6 +113,7 @@ export default function Profile() {
           name="password"
           placeholder="Digite sua senha"
           handleOnChange={handleChange}
+          value=""
         />
         <Input
           text="Confirmação de Senha"
