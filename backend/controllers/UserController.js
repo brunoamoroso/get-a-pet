@@ -145,6 +145,7 @@ class UserController {
             if (!checkPassword) {
                 return res.status(422).json({ message: "Senha inválida" });
             }
+            yield (0, create_user_token_1.default)(user, req, res);
         });
     }
     static checkUser(req, res) {
