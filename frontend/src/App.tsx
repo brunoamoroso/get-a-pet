@@ -8,9 +8,10 @@ import Container from "./components/layout/Container";
 import Message from "./components/layout/Message";
 
 // Pages
-import Register from "./components/pages/auth/Register";
-import Login from "./components/pages/auth/Login";
+import Register from "./components/pages/Auth/Register";
+import Login from "./components/pages/Auth/Login";
 import Home from "./components/pages/Home";
+import Profile from "./components/pages/User/Profile";
 
 //Context
 import { UserProvider } from "./context/UserContext";
@@ -25,6 +26,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/user/profile" element={<Profile />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Container>
