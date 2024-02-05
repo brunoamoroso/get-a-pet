@@ -151,7 +151,6 @@ class UserController {
     static checkUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let currentUser;
-            console.log(req.headers.authorization);
             if (req.headers.authorization) {
                 const token = (0, get_token_1.default)(req);
                 const decoded = jsonwebtoken_1.default.verify(token, "nossosecret");
