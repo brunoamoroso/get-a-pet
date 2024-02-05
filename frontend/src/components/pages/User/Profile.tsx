@@ -7,7 +7,7 @@ import useFlashMessage from "../../../hooks/useFlashMessage";
 
 interface IUser {
   _id?: string;
-  img?: File | "";
+  image?: File | "";
   name?: string | "";
   email?: string | "";
   phone?: string | "";
@@ -16,8 +16,9 @@ interface IUser {
 
 export default function Profile() {
   const [user, setUser] = useState<IUser>({});
+  const [preview, setPreview] = useState(new Blob());
   const [token] = useState(localStorage.getItem("token") || "");
-  const {setFlashMessage} = useFlashMessage();
+  const { setFlashMessage } = useFlashMessage();
 
   useEffect(() => {
     api
@@ -33,6 +34,7 @@ export default function Profile() {
 
   function onFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files !== null) {
+      setPreview(e.target.files[0]);
       setUser({ ...user, [e.target.value]: e.target.files[0] });
     }
   }
@@ -45,27 +47,27 @@ export default function Profile() {
     e.preventDefault();
     let msgType = "success";
 
-
     const formData = new FormData();
 
-    (Object.keys(user) as (keyof typeof user)[]).forEach(
-      (key) => {
-        const value = user[key];
-        formData.append(key, value ? value.toString() : "");
-      }
-    );
-
-    const data = await api.patch(`users/edit/${user._id}`, formData, {
-        headers:{
-            Authorization: `Bearer ${JSON.parse(token)}`,
-            'Content-Type': 'multipart/form-data',
-        }
-    }).then((response) => {
-        return response.data;
-    }).catch((err) => {
-        msgType = 'error';
-        return err.response.data;
+    (Object.keys(user) as (keyof typeof user)[]).forEach((key) => {
+      const value = user[key];
+      formData.append(key, value ? value.toString() : "");
     });
+
+    const data = await api
+      .patch(`users/edit/${user._id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token)}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        msgType = "error";
+        return err.response.data;
+      });
 
     setFlashMessage(data.message, msgType);
   }
@@ -74,7 +76,16 @@ export default function Profile() {
     <section>
       <div className={styles.profile_header}>
         <h1>Perfil</h1>
-        <p>Imagem</p>
+        {(user.image || preview) && (
+          <img
+            src={
+              preview
+                ? URL.createObjectURL(preview)
+                : `${process.env.REACT_APP_API}/images/users/${user.image}`
+            }
+            alt={user.name}
+          />
+        )}
       </div>
       <form onSubmit={handleSubmit} className={formStyles.form_container}>
         <Input
