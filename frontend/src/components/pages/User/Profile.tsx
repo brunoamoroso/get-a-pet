@@ -55,20 +55,6 @@ export default function Profile() {
       formData.append(key, value ? value.toString() : "");
     });
 
-    console.log(formData);
-
-    console.log(await api.patch(`users/edit/${user._id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${JSON.parse(token)}`
-      },
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((err) => {
-      msgType = "error";
-      return err.response.data;
-    }));
 
     const data = await api.patch(`users/edit/${user._id}`, formData, {
         headers: {
@@ -76,14 +62,14 @@ export default function Profile() {
         },
       })
       .then((response) => {
+        console.log(response.data);
         return response.data;
       })
       .catch((err) => {
+        console.log(err);
         msgType = "error";
         return err.response.data;
       });
-
-      console.log(data);
 
     setFlashMessage(data.message, msgType);
   }
