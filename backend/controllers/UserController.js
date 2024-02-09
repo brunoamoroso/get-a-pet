@@ -176,20 +176,23 @@ class UserController {
         });
     }
     static editUser(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { name, email, phone, password, confirmpassword } = req.body;
+            const { name, email, phone, password, confirmpassword, image } = req.body;
+            console.log(req);
             //check if user exists
-            const token = yield (0, get_token_1.default)(req);
+            const token = (0, get_token_1.default)(req);
             const user = yield (0, get_user_by_token_1.default)(token);
-            if (req.file) {
-                user.image = req.file.filename;
-            }
             if (!name) {
                 return res.status(422).json({ message: "O nome é obrigatório" });
             }
             user.name = name;
             if (!email) {
                 return res.status(422).json({ message: "O email é obrigatório" });
+            }
+            if (image) {
+                const imageName = (_a = req.file) === null || _a === void 0 ? void 0 : _a.filename;
+                user.image = imageName;
             }
             const userExists = yield User_1.default.findOne({ email: email });
             //check if user exists
@@ -225,7 +228,7 @@ class UserController {
             try {
                 //returns user updated date
                 const updatedUser = yield User_2.default.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
-                res.status(200).json({ message: "Usuário atualizado com sucesso!" });
+                res.status(200).json({ message: "Usuário atualizado com sucesso!", data: updatedUser });
             }
             catch (error) {
                 return res.status(500).json({ message: error });

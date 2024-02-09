@@ -4,6 +4,7 @@ import Input from "../../form/Input";
 import styles from "./Profile.module.css";
 import api from "../../../utils/api";
 import useFlashMessage from "../../../hooks/useFlashMessage";
+import RoundedImage from "../../layout/RoundedImage";
 
 interface IUser {
   _id?: string;
@@ -35,7 +36,7 @@ export default function Profile() {
   function onFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files !== null) {
       setPreview(e.target.files[0]);
-      setUser({ ...user, [e.target.value]: e.target.files[0] });
+      setUser({ ...user, [e.target.name]: e.target.files[0] });
     }
   }
 
@@ -54,11 +55,24 @@ export default function Profile() {
       formData.append(key, value ? value.toString() : "");
     });
 
-    const data = await api
-      .patch(`users/edit/${user._id}`, formData, {
+    console.log(formData);
+
+    console.log(await api.patch(`users/edit/${user._id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(token)}`
+      },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      msgType = "error";
+      return err.response.data;
+    }));
+
+    const data = await api.patch(`users/edit/${user._id}`, formData, {
         headers: {
-          Authorization: `Bearer ${JSON.parse(token)}`,
-          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${JSON.parse(token)}`
         },
       })
       .then((response) => {
@@ -69,6 +83,8 @@ export default function Profile() {
         return err.response.data;
       });
 
+      console.log(data);
+
     setFlashMessage(data.message, msgType);
   }
 
@@ -77,7 +93,7 @@ export default function Profile() {
       <div className={styles.profile_header}>
         <h1>Perfil</h1>
         {(user.image || preview) && (
-          <img
+          <RoundedImage
             src={
               preview
                 ? URL.createObjectURL(preview)
@@ -87,7 +103,7 @@ export default function Profile() {
           />
         )}
       </div>
-      <form onSubmit={handleSubmit} className={formStyles.form_container}>
+      <form onSubmit={handleSubmit} className={formStyles.form_container} >
         <Input
           text="Imagem"
           type="file"
@@ -124,7 +140,7 @@ export default function Profile() {
           name="password"
           placeholder="Digite sua senha"
           handleOnChange={handleChange}
-          value=""
+          value={user.password || ""}
         />
         <Input
           text="Confirmação de Senha"

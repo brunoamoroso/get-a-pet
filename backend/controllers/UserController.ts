@@ -182,15 +182,13 @@ export default class UserController {
   }
 
   static async editUser(req: Request, res: Response) {
-    const { name, email, phone, password, confirmpassword } = req.body;
+    const { name, email, phone, password, confirmpassword, image } = req.body;
+    console.log(req);
 
     //check if user exists
-    const token = await getToken(req);
+    const token = getToken(req);
     const user = await getUserByToken(token);
 
-    if (req.file) {
-      user!.image = req.file.filename;
-    }
 
     if (!name) {
       return res.status(422).json({ message: "O nome é obrigatório" });
@@ -200,6 +198,11 @@ export default class UserController {
 
     if (!email) {
       return res.status(422).json({ message: "O email é obrigatório" });
+    }
+
+    if(image){
+      const imageName = req.file?.filename;
+      user!.image = imageName;
     }
 
     const userExists = await UserModel.findOne({ email: email });
@@ -218,6 +221,7 @@ export default class UserController {
     }
 
     user.email = email;
+
 
     if (!phone) {
       return res.status(422).json({ message: "O telefone é obrigatório" });
@@ -249,7 +253,7 @@ export default class UserController {
         { new: true }
       );
 
-      res.status(200).json({ message: "Usuário atualizado com sucesso!" });
+      res.status(200).json({ message: "Usuário atualizado com sucesso!", data: updatedUser });
     } catch (error) {
       return res.status(500).json({ message: error });
     }
