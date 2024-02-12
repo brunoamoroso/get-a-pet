@@ -17,7 +17,7 @@ interface IUser {
 
 export default function Profile() {
   const [user, setUser] = useState<IUser>({});
-  const [preview, setPreview] = useState(new Blob());
+  const [preview, setPreview] = useState<Blob | null>(null);
   const [token] = useState(localStorage.getItem("token") || "");
   const { setFlashMessage } = useFlashMessage();
 
@@ -30,6 +30,7 @@ export default function Profile() {
       })
       .then((response) => {
         setUser(response.data);
+        console.log(response.data);
       });
   }, [token]);
 
@@ -52,13 +53,15 @@ export default function Profile() {
 
     (Object.keys(user) as (keyof typeof user)[]).forEach((key) => {
       const value = user[key];
-      formData.append(key, value ? value.toString() : "");
+      if(value !== undefined){
+        formData.append(key, value);
+      }
     });
 
 
-    const data = await api.patch(`users/edit/${user._id}`, formData, {
+    const data = await api.patch(`/users/edit/${user._id}`, formData, {
         headers: {
-          Authorization: `Bearer ${JSON.parse(token)}`
+          Authorization: `Bearer ${JSON.parse(token)}`,
         },
       })
       .then((response) => {
@@ -83,7 +86,7 @@ export default function Profile() {
             src={
               preview
                 ? URL.createObjectURL(preview)
-                : `${process.env.REACT_APP_API}/images/users/${user.image}`
+                : `${process.env.REACT_APP_API}/imgs/users/${user.image}`
             }
             alt={user.name}
           />
