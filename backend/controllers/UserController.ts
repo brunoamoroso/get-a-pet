@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import * as bcrypt from "bcrypt";
 import UserModel from "../models/User";
-import User from "../models/User";
 import jwt from "jsonwebtoken";
 
 //helpers
@@ -103,7 +102,7 @@ export default class UserController {
     const passwordHash = await bcrypt.hash(password, salt);
 
     //create a user
-    const user = new User({
+    const user = new UserModel({
       name: name,
       email: email,
       phone: phone,
@@ -158,7 +157,7 @@ export default class UserController {
       const token = getToken(req);
       const decoded = jwt.verify(token, "nossosecret") as JwtPayload;
 
-      currentUser = await User.findById(decoded.id);
+      currentUser = await UserModel.findById(decoded.id);
       currentUser!.password = "";
     } else {
       currentUser = {};
@@ -170,7 +169,7 @@ export default class UserController {
   static async getUserById(req: Request, res: Response) {
     const id = req.params.id;
 
-    const user = await User.findById(id).select("-password");
+    const user = await UserModel.findById(id).select("-password");
 
     if (!user) {
       return res.status(422).json({
@@ -182,12 +181,17 @@ export default class UserController {
   }
 
   static async editUser(req: Request, res: Response) {
-    const { name, email, phone, password, confirmpassword, image } = req.body;
-    console.log(req);
+    const { name, email, phone, password, confirmpassword } = req.body;
 
     //check if user exists
     const token = getToken(req);
     const user = await getUserByToken(token);
+
+    let image = '';
+
+    if(req.file){
+      image = req.file.filename;
+    }
 
 
     if (!name) {
@@ -247,7 +251,7 @@ export default class UserController {
 
     try {
       //returns user updated date
-      const updatedUser = await User.findOneAndUpdate(
+      const updatedUser = await UserModel.findOneAndUpdate(
         { _id: user._id },
         { $set: user },
         { new: true }

@@ -37,7 +37,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcrypt"));
 const User_1 = __importDefault(require("../models/User"));
-const User_2 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //helpers
 const create_user_token_1 = __importDefault(require("../helpers/create-user-token"));
@@ -106,7 +105,7 @@ class UserController {
             const salt = yield bcrypt.genSalt(12);
             const passwordHash = yield bcrypt.hash(password, salt);
             //create a user
-            const user = new User_2.default({
+            const user = new User_1.default({
                 name: name,
                 email: email,
                 phone: phone,
@@ -154,7 +153,7 @@ class UserController {
             if (req.headers.authorization) {
                 const token = (0, get_token_1.default)(req);
                 const decoded = jsonwebtoken_1.default.verify(token, "nossosecret");
-                currentUser = yield User_2.default.findById(decoded.id);
+                currentUser = yield User_1.default.findById(decoded.id);
                 currentUser.password = "";
             }
             else {
@@ -166,7 +165,7 @@ class UserController {
     static getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const user = yield User_2.default.findById(id).select("-password");
+            const user = yield User_1.default.findById(id).select("-password");
             if (!user) {
                 return res.status(422).json({
                     message: "Usuário não encontrado",
@@ -178,11 +177,14 @@ class UserController {
     static editUser(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { name, email, phone, password, confirmpassword, image } = req.body;
-            console.log(req);
+            const { name, email, phone, password, confirmpassword } = req.body;
             //check if user exists
             const token = (0, get_token_1.default)(req);
             const user = yield (0, get_user_by_token_1.default)(token);
+            let image = '';
+            if (req.file) {
+                image = req.file.filename;
+            }
             if (!name) {
                 return res.status(422).json({ message: "O nome é obrigatório" });
             }
@@ -227,7 +229,7 @@ class UserController {
             }
             try {
                 //returns user updated date
-                const updatedUser = yield User_2.default.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
+                const updatedUser = yield User_1.default.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
                 res.status(200).json({ message: "Usuário atualizado com sucesso!", data: updatedUser });
             }
             catch (error) {
