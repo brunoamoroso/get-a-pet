@@ -86,7 +86,7 @@ export default function Profile() {
             src={
               preview
                 ? URL.createObjectURL(preview)
-                : `${process.env.REACT_APP_API}/imgs/users/${user.image}`
+                : `${process.env.REACT_APP_API}imgs/users/${user.image}`
             }
             alt={user.name}
           />

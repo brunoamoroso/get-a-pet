@@ -241,7 +241,7 @@ export default class PetController {
 
     if (pet.user._id.equals(user!._id)) {
       return res.status(422).json({
-        messsage: "Você não pode agendar uma visita com seu próprio pet!",
+        message: "Você não pode agendar uma visita com seu próprio pet!",
       });
     }
 

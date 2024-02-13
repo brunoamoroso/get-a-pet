@@ -201,7 +201,7 @@ class PetController {
             const user = yield (0, get_user_by_token_1.default)(token);
             if (pet.user._id.equals(user._id)) {
                 return res.status(422).json({
-                    messsage: "Você não pode agendar uma visita com seu próprio pet!",
+                    message: "Você não pode agendar uma visita com seu próprio pet!",
                 });
             }
             //check if user has already scheduled a visit
