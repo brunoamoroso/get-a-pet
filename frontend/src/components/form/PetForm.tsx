@@ -10,6 +10,7 @@ interface IPetFormProps {
 }
 
 export interface IPetData {
+  _id?: string;
   images?: File[];
   name?: string;
   age?: string;

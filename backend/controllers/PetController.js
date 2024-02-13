@@ -177,10 +177,7 @@ class PetController {
                 return res.status(422).json({ message: "A cor é obrigatória" });
             }
             updatedData.color = color;
-            if (!images) {
-                return res.status(422).json({ message: "As imagens são obrigatórias" });
-            }
-            else {
+            if (images.length > 0) {
                 updatedData.images = [];
                 images.map((image) => {
                     var _a;
