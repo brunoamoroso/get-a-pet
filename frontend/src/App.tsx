@@ -19,6 +19,7 @@ import MyPets from "./components/pages/Pets/MyPets";
 import AddPet from "./components/pages/Pets/AddPet";
 import EditPets from "./components/pages/Pets/EditPets";
 import PetDetails from './components/pages/Pets/PetDetails';
+import MyAdoptions from "./components/pages/Pets/MyAdoptions";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/pets/add" element={<AddPet />} />
             <Route path="/pets/edit/:id" element={<EditPets />} />
             <Route path="/pets/:id" element={<PetDetails />} />
+            <Route path="/pets/myadoptions" element={<MyAdoptions />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Container>
