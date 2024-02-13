@@ -8,7 +8,7 @@ interface IInputProps {
   placeholder?: string;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
-  multiple?: string[];
+  multiple?: boolean;
 }
 
 const Input: React.FunctionComponent<IInputProps> = ({
@@ -30,7 +30,7 @@ const Input: React.FunctionComponent<IInputProps> = ({
         placeholder={placeholder}
         onChange={handleOnChange}
         value={value}
-        // {...(multiple ? { multiple } : "")}
+        multiple={multiple}
       />
     </div>
   );
