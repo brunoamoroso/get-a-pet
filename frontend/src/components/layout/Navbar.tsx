@@ -30,6 +30,9 @@ export default function Navbar() {
         {authenticated ? (
           <>
           <li>
+              <Link to={"/pets/mypets"}>Meus Pets</Link>
+            </li>
+          <li>
               <Link to={"/user/profile"}>Perfil</Link>
             </li>
             <li onClick={logout}>Sair</li>

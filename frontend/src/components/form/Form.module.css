@@ -34,3 +34,15 @@
 .form_container p a:hover{
     color:  #1C8A42;
 }
+
+.preview_pet_images{
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+}
+
+.preview_pet_images img{
+    width: 100px;
+    height: 100px;
+    margin-left: 1rem;
+}
