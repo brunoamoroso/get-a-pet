@@ -1,9 +1,14 @@
 .navbar{
     display: flex;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
-    background-color: #FFd400;
-    color: #16479d;
+    padding: 2rem 1.5rem;
+    background-color: #FFF;
+    color: #090909;
+    border-bottom: 2px solid #cccccc;
+}
+
+.navbar h2{
+    font-weight: 550;
 }
 
 .navbar_logo{
@@ -20,6 +25,7 @@
     display: flex;
     align-items: center;
     list-style: none;
+    margin-bottom: 0px;
 }
 
 .navbar li, .navbar a{
@@ -27,13 +33,11 @@
     color: #16479d;
     font-weight: bold;
     cursor: pointer;
-    transition: .5s all;
+    transition: .1s all;
     padding: .5rem .8rem;
-    border-radius: 5px;
     margin-left: .5rem;
 }
 
-.navbar li:hover > a{
-    background-color: #16479d;
-    color: #FFF;
+.navbar li:hover{
+    border-bottom: 2px solid #16479d;
 }

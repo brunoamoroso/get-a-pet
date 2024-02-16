@@ -30,7 +30,6 @@ export default function Profile() {
       })
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
       });
   }, [token]);
 
@@ -53,23 +52,21 @@ export default function Profile() {
 
     (Object.keys(user) as (keyof typeof user)[]).forEach((key) => {
       const value = user[key];
-      if(value !== undefined){
+      if (value !== undefined) {
         formData.append(key, value);
       }
     });
 
-
-    const data = await api.patch(`/users/edit/${user._id}`, formData, {
+    const data = await api
+      .patch(`/users/edit/${user._id}`, formData, {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
         return response.data;
       })
       .catch((err) => {
-        console.log(err);
         msgType = "error";
         return err.response.data;
       });
@@ -79,67 +76,76 @@ export default function Profile() {
 
   return (
     <section>
-      <div className={styles.profile_header}>
-        <h1>Perfil</h1>
-        {(user.image || preview) && (
-          <RoundedImage
-            src={
-              preview
-                ? URL.createObjectURL(preview)
-                : `${process.env.REACT_APP_API}imgs/users/${user.image}`
-            }
-            alt={user.name}
-          />
-        )}
+      <div className="row justify-content-center">
+        <div className="col-6">
+          <div className={`${styles.profile_header} mb-1`}>
+            <h1>Perfil</h1>
+            {(user.image || preview) && (
+              <RoundedImage
+                src={
+                  preview
+                    ? URL.createObjectURL(preview)
+                    : `${process.env.REACT_APP_API}imgs/users/${user.image}`
+                }
+                alt={user.name}
+              />
+            )}
+          </div>
+          <form onSubmit={handleSubmit} style={{paddingTop: "24px"}} className={`mt-5 ${formStyles.form_container}`}>
+            <Input
+              text="Imagem"
+              type="file"
+              name="image"
+              handleOnChange={onFileChange}
+            />
+            <Input
+              text="Email"
+              type="email"
+              name="email"
+              placeholder="Digite o seu email"
+              handleOnChange={handleChange}
+              value={user.email || ""}
+            />
+            <Input
+              text="Nome"
+              type="text"
+              name="name"
+              placeholder="Digite o seu nome"
+              handleOnChange={handleChange}
+              value={user.name || ""}
+            />
+            <Input
+              text="Telefone"
+              type="text"
+              name="phone"
+              placeholder="Digite o seu telefone"
+              handleOnChange={handleChange}
+              value={user.phone || ""}
+            />
+            <Input
+              text="Senha"
+              type="password"
+              name="password"
+              placeholder="Digite sua senha"
+              handleOnChange={handleChange}
+              value={user.password || ""}
+            />
+            <Input
+              text="Confirmação de Senha"
+              type="password"
+              name="confirmpassword"
+              placeholder="Confirme a sua senha"
+              handleOnChange={handleChange}
+            />
+            <input
+              style={{ width: "100%", marginTop: "32px" }}
+              className="btn btn-primary btn-lg d-flex"
+              type="submit"
+              value="Editar"
+            />
+          </form>
+        </div>
       </div>
-      <form onSubmit={handleSubmit} className={formStyles.form_container} >
-        <Input
-          text="Imagem"
-          type="file"
-          name="image"
-          handleOnChange={onFileChange}
-        />
-        <Input
-          text="Email"
-          type="email"
-          name="email"
-          placeholder="Digite o seu email"
-          handleOnChange={handleChange}
-          value={user.email || ""}
-        />
-        <Input
-          text="Nome"
-          type="text"
-          name="name"
-          placeholder="Digite o seu nome"
-          handleOnChange={handleChange}
-          value={user.name || ""}
-        />
-        <Input
-          text="Telefone"
-          type="text"
-          name="phone"
-          placeholder="Digite o seu telefone"
-          handleOnChange={handleChange}
-          value={user.phone || ""}
-        />
-        <Input
-          text="Senha"
-          type="password"
-          name="password"
-          placeholder="Digite sua senha"
-          handleOnChange={handleChange}
-          value={user.password || ""}
-        />
-        <Input
-          text="Confirmação de Senha"
-          type="password"
-          name="confirmpassword"
-          placeholder="Confirme a sua senha"
-          handleOnChange={handleChange}
-        />
-        <input type="submit" value="Editar" />
-      </form>
     </section>
   );
 }

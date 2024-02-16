@@ -59,6 +59,8 @@ export default function EditPets (props: IEditPetsProps) {
         setFlashMessage(data.message, msgType);
     }
 
+    const formTitle = `Editando o Pet: ${pet.name}`;
+    const formDesc = "Depois da edição os dados serão atualizados no sistema."
   return (
     <section>
         <div className={styles.addPet_header}>
@@ -67,7 +69,7 @@ export default function EditPets (props: IEditPetsProps) {
         </div>
         {
             pet.name && (
-                <PetForm btnText="Editar" handleSubmit={updatePet} petData={pet}/>
+                <PetForm title={formTitle} desc={formDesc} btnText="Editar" handleSubmit={updatePet} petData={pet}/>
             )
         }
     </section>

@@ -9,7 +9,6 @@ const path_1 = __importDefault(require("path"));
 const imgStorage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
         let folder = "";
-        console.log(req);
         if (req.baseUrl.includes("users")) {
             folder = "users";
         }

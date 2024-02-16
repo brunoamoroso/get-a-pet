@@ -18,7 +18,7 @@ export default function Navbar() {
   }
   
   return (
-    <nav className={styles.navbar}>
+    <nav className={`${styles.navbar} d-flex flex-row align-items-center`}>
       <div className={styles.navbar_logo}>
         <img src={Logo} alt="Get a Pet" />
         <h2>Get a Pet</h2>

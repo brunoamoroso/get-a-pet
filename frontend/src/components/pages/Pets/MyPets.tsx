@@ -66,8 +66,10 @@ export default function MyPets(props: IMyPets) {
   return (
     <section>
       <div className={styles.petlist_header}>
-      <h1>Meus Pets</h1>
-      <Link to={"/pets/add"}>Cadastrar Pet</Link>
+        <h1>Meus Pets</h1>
+        <Link to={"/pets/add"}>
+          <button className="btn btn-primary btn-lg">Cadastrar Pet</button>
+        </Link>
       </div>
       <div className={styles.container}>
         {pets.length > 0 &&
@@ -83,10 +85,10 @@ export default function MyPets(props: IMyPets) {
                 {pet.avaiable ? (
                   <>
                     {pet.adopter && (
-                      <button className={styles.conclude_btn} onClick={() => { concludeAdoption(pet._id) }}>Concluir Adoção</button>
+                      <button className={`btn btn-outline-success`} onClick={() => { concludeAdoption(pet._id) }}>Concluir Adoção</button>
                     )}
-                    <Link to={`/pets/edit/${pet._id}`}>Editar</Link>
-                    <button onClick={() => { removePet(pet._id)}}>Excluir</button>
+                    <Link to={`/pets/edit/${pet._id}`}><button className="btn btn-outline-primary">Editar</button></Link>
+                    <button className="btn btn-outline-primary" onClick={() => { removePet(pet._id)}}>Excluir</button>
                   </>
                 ) : (
                   <p>Pet já adotado</p>

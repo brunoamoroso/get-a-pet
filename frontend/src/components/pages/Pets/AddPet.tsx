@@ -54,12 +54,12 @@ export default function AddPet(props: IAddPet) {
     }
   }
 
+  const formTitle = "Cadastre um Pet";
+  const formDesc = "Depois ele ficará disponível para adoção.";
   return (
-    <section className={styles.addPet_header}>
-      <div>
-        <h1>Cadastre um Pet</h1>
-        <p>Depois ele ficará disponível para adoção.</p>
-        <PetForm handleSubmit={registerPet} btnText="Cadastrar" />
+    <section>
+      <div className="mt-4">
+        <PetForm title={formTitle} desc={formDesc} handleSubmit={registerPet} btnText="Cadastrar" />
       </div>
     </section>
   );
